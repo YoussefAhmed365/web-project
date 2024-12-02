@@ -1,0 +1,65 @@
+create table users(
+	id int primary key AUTO_INCREMENT,
+	firstname varchar(25) NOT NULL ,
+	lastname varchar(50) NOT NULL,
+	email varchar(50) NOT NULL,
+    PASSWORD varchar(50) NOT NULL,
+	phone varchar(15) NOT NULL,
+	address text,
+	profilephoto varchar(50),
+    created_at timestamp NOT NULL DEFAULT current_timestamp(),
+    updated_at timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+);
+create table admin(
+	id int(20) primary key AUTO_INCREMENT,
+	firstname varchar(25) NOT NULL ,
+	lastname varchar(50) NOT NULL ,
+	email varchar(50) NOT NULL ,
+    PASSWORD varchar(50) NOT NULL,
+	phone varchar(15) NOT NULL ,
+	distribution_address text,
+	profilephoto varchar(50),
+    created_at timestamp NOT NULL DEFAULT current_timestamp(),
+    updated_at timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+);
+create table items(
+	id int primary key AUTO_INCREMENT,
+	vendor_id int  NOT NULL,
+	title varchar(255),
+	descriptionn text,
+	price decimal,
+	amount int,
+	sold int ,
+	created_at timestamp NOT NULL DEFAULT current_timestamp(),
+    updated_at timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+    CONSTRAINT ibfk_vendor_id1 FOREIGN KEY (vendor_id) REFERENCES admin(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+create table favorite(
+	id int primary key AUTO_INCREMENT,
+	user_id int NOT NULL,
+	item_id int NOT NULL,
+	created_at timestamp NOT NULL DEFAULT current_timestamp(),
+    CONSTRAINT ibfk_user_id1 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT ibfk_item_id1 FOREIGN KEY (item_id) REFERENCES items(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+create table cart(
+	id int primary key AUTO_INCREMENT,
+	user_id int NOT NULL,
+	item_id int NOT NULL,
+	amount int NOT NULL,
+	created_at timestamp NOT NULL DEFAULT current_timestamp(),
+    updated_at timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+    CONSTRAINT ibfk_user_id1 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT ibfk_item_id1 FOREIGN KEY (item_id) REFERENCES items(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+create table comments(
+	id int primary key AUTO_INCREMENT,
+	user_id int NOT NULL,
+	item_id int NOT NULL,
+	rating int,
+	comment text,
+	created_at timestamp NOT NULL DEFAULT current_timestamp(),
+    updated_at timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+    CONSTRAINT ibfk_user_id1 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT ibfk_item_id1 FOREIGN KEY (item_id) REFERENCES items(id) ON DELETE CASCADE ON UPDATE CASCADE
+);

@@ -1,37 +1,74 @@
 :root{
     --first: #1e2022;
     --hover: #27292b;
+    --active: #17191b;
     --second: #52616b;
     --third: #c9d6df;
     --fourth: #f0f5f9;
     --attract: #ff8600;
 }
 .btn-default{
-    color: #fff;
-    background: var(--first);
-    border-color: var(--first);
+    color: #fff!important;
+    background: var(--first)!important;
+    border-color: var(--first)!important;
 }
 .btn-default:hover{
-    color: #fff;
-    background: var(--hover);
-    border-color: var(--hover);
+    color: #fff!important;
+    background: var(--hover)!important;
+    border-color: var(--hover)!important;
 }
 .btn-default:focus{
-    box-shadow:  var(--seecond);
+    box-shadow:  var(--second)!important;
 }
 .btn-default:active{
-    color: #fff;
-    background: var(--first);
-    border-color: var(--first);
+    color: #fff!important;
+    background: var(--active)!important;
+    border-color: var(--active)!important;
     box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
 }
 .btn-default:disabled{
-    color: var(--first);
-    background: var(--third);
-    border-color: var(--third);
+    color: var(--first)!important;
+    background: var(--third)!important;
+    border-color: var(--third)!important;
 }
 html{
     scroll-behavior: smooth;
+}
+.loader-container{
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.loader{
+    border: 4px solid var(--hover);
+    border-left-color: transparent;
+    border-radius: 50%;
+}
+.loader{
+    border: 4px solid var(--hover);
+    border-left-color: transparent;
+    width: 36px;
+    height: 36px;
+}
+.loader{
+    border: 4px solid var(--hover);
+    border-left-color: transparent;
+    width: 36px;
+    height: 36px;
+    animation: spin 0.7s linear infinite;
+}
+@keyframes spin{
+    0%{
+        transform: rotate(0deg);
+    }
+    100%{
+        transform: rotate(360deg);
+    }
+}
+.content{
+    display: none;
 }
 nav button{
     width: 40px;
@@ -127,6 +164,7 @@ nav .form-control:focus{
     opacity: 1;
     visibility: visible;
 }
+/*Body*/
 header{
     height: 400px;
     background-size: cover;
@@ -201,9 +239,6 @@ header{
     max-height: 10rem;
     object-fit: cover;
     border-radius: 10px;
-}
-.fa-star{
-    color: gold;
 }
 .subscribe{
     background-position: center;

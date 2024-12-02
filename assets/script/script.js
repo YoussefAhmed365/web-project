@@ -1,19 +1,34 @@
+document.addEventListener("DOMContentLoaded", () => {
+  // إظهار اللودر حتى انتهاء تحميل جميع الأجزاء
+  const loader = document.getElementById("loader");
+  const content = document.getElementById("content");
+
+  // الانتظار حتى يتم تحميل الصفحة بالكامل (بما في ذلك الصور والمصادر)
+  window.addEventListener("load", () => {
+    // إخفاء اللودر بعد تحميل الصفحة بالكامل
+    loader.style.display = "none";
+
+    // عرض المحتوى بعد انتهاء التحميل
+    content.style.display = "block";
+  });
+});
+
 // search button
 const searchButton = document.getElementById('searchButton');
-  const searchContainer = document.querySelector('.search-container');
-  const searchInput = document.getElementById('searchInput');
+const searchContainer = document.querySelector('.search-container');
+const searchInput = document.getElementById('searchInput');
 
-  searchButton.addEventListener('click', () => {
-    searchContainer.classList.toggle('expanded');
-    searchInput.focus(); // Focus on the input field
-  });
+searchButton.addEventListener('click', () => {
+  searchContainer.classList.toggle('expanded');
+  searchInput.focus(); // Focus on the input field
+});
 
-  // Hide input when clicked outside
-  document.addEventListener('click', (e) => {
-    if (!searchContainer.contains(e.target)) {
-      searchContainer.classList.remove('expanded');
-    }  
-});    
+// Hide input when clicked outside
+document.addEventListener('click', (e) => {
+  if (!searchContainer.contains(e.target)) {
+    searchContainer.classList.remove('expanded');
+  }
+});
 
 // favouraite button
 const favBtn = document.getElementById("favButton");
@@ -78,11 +93,12 @@ function toggleCartBox() {
   }
 }
 
+/*Body*/
 const productBtn = document.querySelectorAll('.products-btn');
 
 productBtn.forEach(button => {
   button.addEventListener("click", () => {
-    productBtn.forEach(btn => {btn.classList.remove("active-btn")});
+    productBtn.forEach(btn => { btn.classList.remove("active-btn") });
     button.classList.add("active-btn");
   })
 });

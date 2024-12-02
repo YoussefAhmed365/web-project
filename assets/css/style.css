@@ -1,3 +1,217 @@
+:root{
+    --first: #1e2022;
+    --hover: #27292b;
+    --second: #52616b;
+    --third: #c9d6df;
+    --fourth: #f0f5f9;
+    --attract: #ff8600;
+}
+.btn-default{
+    color: #fff;
+    background: var(--first);
+    border-color: var(--first);
+}
+.btn-default:hover{
+    color: #fff;
+    background: var(--hover);
+    border-color: var(--hover);
+}
+.btn-default:focus{
+    box-shadow:  var(--seecond);
+}
+.btn-default:active{
+    color: #fff;
+    background: var(--first);
+    border-color: var(--first);
+    box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.btn-default:disabled{
+    color: var(--first);
+    background: var(--third);
+    border-color: var(--third);
+}
 html{
     scroll-behavior: smooth;
+}
+nav button{
+    width: 40px;
+    height: 40px;
+}
+.btn-default{
+    background-color: var(--first);
+
+}
+.search-container{
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 40px; /* Initial width for the icon */
+    transition: width 0.3s ease-in-out;
+}
+.search-container.expanded{
+    width: 100%;
+}
+.search-input{
+    width: 0;
+    opacity: 0;
+    border-radius: 20px;
+    transition: width 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    position: absolute;
+    left: 0;
+    z-index: 1;
+}
+.search-container.expanded .search-input{
+    width: 93%;
+    opacity: 1;
+    padding-right: 40px;
+}
+nav .form-control:focus{
+    box-shadow: none!important;
+    border: 1px solid var(--hover);
+}
+.search-btn{
+    border: none;
+    position: absolute;
+    right: 0;
+    z-index: 2;
+}
+.fav-box{
+    width: 350px;
+    left: 50%;
+    transform: translateX(-90%);
+    display: none;
+}
+.fav-products{
+    max-height: 285px;
+    width: inherit;
+    overflow-y: scroll;
+}
+.fav-products::-webkit-scrollbar{
+    width: 3px;
+}
+.fav-products::-webkit-scrollbar-track{
+    background: transparent;
+}
+.fav-products::-webkit-scrollbar-thumb{
+    background: var(--second);
+}
+.cart-box{
+    width: 350px;
+    left: 50%;
+    transform: translateX(-90%);
+    display: none;
+}
+.cart-products{
+    max-height: 285px;
+    width: inherit;
+    overflow-y: scroll;
+}
+.cart-products::-webkit-scrollbar{
+    width: 3px;
+}
+.cart-products::-webkit-scrollbar-track{
+    background: transparent;
+}
+.cart-products::-webkit-scrollbar-thumb{
+    background: var(--second);
+}
+.profile-popover {
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+.position-relative:hover .profile-popover {
+    opacity: 1;
+    visibility: visible;
+}
+header{
+    height: 400px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+.categories-title::before{
+    content: '';
+    position: absolute;
+    width: 3rem;
+    height: 3px;
+    border-radius: 5px;
+    background-color: var(--attract);
+    bottom: -4px;
+    left: 0;
+}
+.categories-cards .card{
+    height: 10rem;
+    flex-basis: 100%;
+    transition: all 0.3s ease-out;
+}
+.categories-cards .card:hover{
+    background-color: white!important;
+    color: black!important;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
+    transform: scale(1.1);
+}
+.gallery{
+    height: 500px;
+}
+.gallery-img{
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.hot h3::before{
+    content: '';
+    position: absolute;
+    background-color: var(--attract);
+    width: 3rem;
+    height: 3px;
+    border-radius: 5px;
+    bottom: -4px;
+    left: 0;
+}
+.hot ul{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    list-style-type: none;
+    gap: 1.5rem;
+}
+.hot li{
+    position: relative;
+}
+.hot button:active{
+    border: none !important;
+    border-color: transparent !important;
+}
+.hot .active-btn::before{
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 3px;
+    border-radius: 5px;
+    background-color: var(--attract);
+    bottom: 0;
+    left: 0;
+}
+.hot .card-img{
+    max-height: 10rem;
+    object-fit: cover;
+    border-radius: 10px;
+}
+.fa-star{
+    color: gold;
+}
+.subscribe{
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.ads{
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
 }

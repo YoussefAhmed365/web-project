@@ -92,3 +92,46 @@ function toggleCartBox() {
         cartBox.style.display = "block";
     }
 }
+
+// Body
+document.addEventListener('click', function (event) {  // Event delegation
+    if (event.target.closest('.add-fav-btn')) {   // Use closest() to handle clicks on the icon within the button as well.
+        const button = event.target.closest('.add-fav-btn');
+        const itemId = button.dataset.id;
+        const icon = button.querySelector("i");
+        let state = '';
+
+        if (icon.classList.contains("fa-regular")) {
+            state = 'add';
+        } else {
+            state = 'remove';
+        }
+        
+        icon.classList.toggle("fa-regular");
+        icon.classList.toggle("fa-solid");
+
+        fetch("fav_handler.php", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ item_id: itemId, state: state })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status} - ${response.statusText}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (!data.success) {
+                icon.classList.toggle("fa-regular");
+                icon.classList.toggle("fa-solid");
+                throw new Error(data.message);
+            }
+        })
+        .catch(error => {
+            console.error("Error adding/removing favorite:", error);
+        });
+    }
+});

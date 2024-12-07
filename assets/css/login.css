@@ -1,0 +1,30 @@
+.main-content{
+    height: 100vh;
+}
+svg{
+    position: absolute;
+    z-index: -1;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.form-container{
+    width: 30rem;
+}
+input:focus{
+    border: var(--active) !important;
+}
+.row{
+    width: 92%;
+    margin: 0 auto;
+}
+.form-check-input:checked {
+    background-color: var(--first) !important;
+    border-color: var(--first) !important;
+}
+.disable-page{
+    background-color: #ffffff;
+    opacity: 0;
+    transition: all 0.4s ease;
+    pointer-events: none;
+}

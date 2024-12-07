@@ -1,0 +1,24 @@
+.quantity{
+    display: flex;
+    width: fit-content;
+    overflow: hidden;
+}
+.input-box{
+    width: 40px;
+    text-align: center;
+    border: none;
+    background-color: #f8f9fa;
+    padding: 8px 10px;
+    font-size: 16px;
+    outline: none;
+}
+.input-box::-webkit-inner-spin-button,
+.input-box::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+.card-img{
+    max-height: 10rem;
+    object-fit: cover;
+    border-radius: 10px;
+}

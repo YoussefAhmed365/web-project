@@ -1,65 +1,73 @@
-create table users(
-	id int primary key AUTO_INCREMENT,
-	firstname varchar(25) NOT NULL ,
-	lastname varchar(50) NOT NULL,
-	email varchar(50) NOT NULL,
-    PASSWORD varchar(50) NOT NULL,
-	phone varchar(15) NOT NULL,
-	address text,
-	profilephoto varchar(50),
-    created_at timestamp NOT NULL DEFAULT current_timestamp(),
-    updated_at timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-);
-create table admin(
-	id int(20) primary key AUTO_INCREMENT,
-	firstname varchar(25) NOT NULL ,
-	lastname varchar(50) NOT NULL ,
-	email varchar(50) NOT NULL ,
-    PASSWORD varchar(50) NOT NULL,
-	phone varchar(15) NOT NULL ,
-	distribution_address text,
-	profilephoto varchar(50),
-    created_at timestamp NOT NULL DEFAULT current_timestamp(),
-    updated_at timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-);
-create table items(
-	id int primary key AUTO_INCREMENT,
-	vendor_id int  NOT NULL,
-	title varchar(255),
-	descriptionn text,
-	price decimal,
-	amount int,
-	sold int ,
-	created_at timestamp NOT NULL DEFAULT current_timestamp(),
-    updated_at timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-    CONSTRAINT ibfk_vendor_id1 FOREIGN KEY (vendor_id) REFERENCES admin(id) ON DELETE CASCADE ON UPDATE CASCADE
-);
-create table favorite(
-	id int primary key AUTO_INCREMENT,
-	user_id int NOT NULL,
-	item_id int NOT NULL,
-	created_at timestamp NOT NULL DEFAULT current_timestamp(),
-    CONSTRAINT ibfk_user_id1 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT ibfk_item_id1 FOREIGN KEY (item_id) REFERENCES items(id) ON DELETE CASCADE ON UPDATE CASCADE
-);
-create table cart(
-	id int primary key AUTO_INCREMENT,
-	user_id int NOT NULL,
-	item_id int NOT NULL,
-	amount int NOT NULL,
-	created_at timestamp NOT NULL DEFAULT current_timestamp(),
-    updated_at timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-    CONSTRAINT ibfk_user_id1 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT ibfk_item_id1 FOREIGN KEY (item_id) REFERENCES items(id) ON DELETE CASCADE ON UPDATE CASCADE
-);
-create table comments(
-	id int primary key AUTO_INCREMENT,
-	user_id int NOT NULL,
-	item_id int NOT NULL,
-	rating int,
-	comment text,
-	created_at timestamp NOT NULL DEFAULT current_timestamp(),
-    updated_at timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-    CONSTRAINT ibfk_user_id1 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT ibfk_item_id1 FOREIGN KEY (item_id) REFERENCES items(id) ON DELETE CASCADE ON UPDATE CASCADE
-);
+CREATE TABLE admin (
+  	id int(20) PRIMARY KEY AUTO_INCREMENT,
+  	firstname varchar(25) NOT NULL,
+  	lastname varchar(50) NOT NULL,
+  	email varchar(255) NOT NULL,
+  	password varchar(255) NOT NULL,
+  	phone varchar(15) NOT NULL,
+  	distribution_address text DEFAULT NULL,
+  	profilephoto varchar(50) DEFAULT NULL,
+  	created_at timestamp NOT NULL DEFAULT current_timestamp(),
+  	updated_at timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE cart (
+  	id int(11) PRIMARY KEY AUTO_INCREMENT,
+  	user_id int(11) NOT NULL,
+  	item_id int(11) NOT NULL,
+  	amount int(11) NOT NULL,
+  	created_at timestamp NOT NULL DEFAULT current_timestamp(),
+  	updated_at timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  	CONSTRAINT ibfk_item_id2 FOREIGN KEY (item_id) REFERENCES items (id) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT ibfk_user_id2 FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE comments (
+  	id int(11) PRIMARY KEY AUTO_INCREMENT,
+  	user_id int(11) NOT NULL,
+  	item_id int(11) NOT NULL,
+  	rating int(11) DEFAULT NULL,
+  	comment text DEFAULT NULL,
+  	created_at timestamp NOT NULL DEFAULT current_timestamp(),
+  	updated_at timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  	CONSTRAINT ibfk_item_id3 FOREIGN KEY (item_id) REFERENCES items (id) ON DELETE CASCADE ON UPDATE CASCADE,
+  	CONSTRAINT ibfk_user_id3 FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE favorite (
+  	id int(11) PRIMARY KEY AUTO_INCREMENT,
+  	user_id int(11) NOT NULL,
+  	item_id int(11) NOT NULL,
+  	created_at timestamp NOT NULL DEFAULT current_timestamp(),
+  	CONSTRAINT ibfk_item_id1 FOREIGN KEY (item_id) REFERENCES items (id) ON DELETE CASCADE ON UPDATE CASCADE,
+  	CONSTRAINT ibfk_user_id1 FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE items (
+  	id int(11) PRIMARY KEY AUTO_INCREMENT,
+  	vendor_id int(11) NOT NULL,
+  	title varchar(255) NOT NULL,
+  	description text DEFAULT NULL,
+  	price decimal(10,2) NOT NULL,
+  	amount int(11) NOT NULL,
+  	sold int(11) DEFAULT NULL,
+  	main_photo varchar(255) NOT NULL,
+  	photos longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  	created_at timestamp NOT NULL DEFAULT current_timestamp(),
+  	updated_at timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  	CONSTRAINT ibfk_vendor_id1 FOREIGN KEY (vendor_id) REFERENCES admin (id) ON DELETE CASCADE ON UPDATE CASCADE;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE users (
+  	id int(11) PRIMARY KEY AUTO_INCREMENT,
+  	firstname varchar(25) NOT NULL,
+  	lastname varchar(50) NOT NULL,
+  	email varchar(255) NOT NULL,
+  	password varchar(255) NOT NULL,
+  	phone varchar(15) DEFAULT NULL,
+  	address text DEFAULT NULL,
+  	profilephoto varchar(50) DEFAULT NULL,
+  	remember_token varchar(255) DEFAULT NULL,
+  	created_at timestamp NOT NULL DEFAULT current_timestamp(),
+  	updated_at timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

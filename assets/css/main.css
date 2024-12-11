@@ -139,7 +139,7 @@ nav .form-control:focus{
     display: none;
 }
 .cart-products{
-    max-height: 285px;
+    max-height: 300px;
     width: inherit;
     overflow-y: scroll;
 }

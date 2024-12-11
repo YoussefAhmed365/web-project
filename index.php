@@ -1,5 +1,16 @@
 <?php
-require 'auth.php';
+include 'db_connect.php';
+
+session_start();
+
+// التحقق من تسجيل الدخول
+if (!isset($_SESSION['user'])) {
+    header("Location: login.php");
+    exit();
+}
+
+// عرض بيانات المستخدم
+$user = $_SESSION['user'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -16,14 +27,13 @@ require 'auth.php';
         <div class="loader"></div>
     </div>
     <div class="content" id="content">
-        <nav class="navbar navbar-expand-lg py-3" aria-label="Thirteenth navbar example">
+        <nav class="navbar navbar-expand-lg py-3">
             <div class="container">
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample11" aria-controls="navbarsExample11" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-    
-                <div class="collapse navbar-collapse d-lg-flex" id="navbarsExample11">
+                <div class="collapse navbar-collapse d-lg-flex">
+                    <!-- navbar logo -->
                     <a class="navbar-brand col-lg-3 me-0 fw-medium" href="index.php">Shop.com</a>
+
+                    <!-- navbar links -->
                     <ul class="navbar-nav col-lg-6 justify-content-lg-center">
                         <li class="nav-item">
                             <a class="nav-link active" aria-current="page" href="index.php">Home</a>
@@ -52,12 +62,16 @@ require 'auth.php';
                     </ul>
     
                     <div class="d-lg-flex col-lg-3 justify-content-lg-end gap-1">
+
+                        <!-- search section -->
                         <div class="search-container d-flex align-items-center">
                             <button class="search-btn btn btn-light rounded-circle" id="searchButton">
                                 <i class="fa-solid fa-magnifying-glass"></i>
                             </button>
                             <input type="text" class="form-control search-input ms-2" id="searchInput" placeholder="Search...">
                         </div>
+
+                        <!-- favourite section -->
                         <div class="position-relative">
                             <button class="favourite btn btn-light rounded-circle" id="favButton">
                                 <i class="fa-solid fa-heart"></i>
@@ -68,48 +82,56 @@ require 'auth.php';
                                         <h5 class="mb-0">Favourites</h5>
                                     </div>
                                     <div class="col-6 text-end">
-                                        <a href="fav.php" class="text-decoration-none text-secondary">Show All</a>
+                                        <a href="#" class="text-decoration-none text-secondary">Show All</a>
                                     </div>
                                 </div>
                                 <hr class="mb-2">
                                 <div class="fav-products row row-cols-1">                                    
-                                    <?php
-                                    if (isset($user_id)) {
-                                        $stmt = $conn->prepare("SELECT items.title, items.main_photo
-                                        FROM favorite
-                                        JOIN items ON favorite.item_id = items.id
-                                        WHERE favorite.user_id = ?");
-                                        $stmt->bind_param("i", $user_id);
-                                        $stmt->execute();
-                                        $result = $stmt->get_result();
-
-                                        if ($result->num_rows > 0) {
-                                            while ($row = $result->fetch_assoc()) {
-                                                $title = $row['title'];
-                                                $photo = $row['main_photo'];
-                                                ?>
-                                                <div class="fav-product col px-3">
-                                                    <div class="row g-1">
-                                                        <div class="col-4 p-2 overflow-hidden">
-                                                            <img src="assets/img/<?php echo htmlspecialchars($photo); ?>" alt="" width="80px" height="80px" style="object-fit: cover;">
-                                                        </div>
-                                                        <div class="col p-2">
-                                                            <h6 class="title"><?php echo htmlspecialchars($title); ?></h6>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <?php
-                                            }
-                                        } else {
-                                            echo '<h6 class="text-center w-100">No favourites yet</h6>';
-                                        }
-                                    } else {
-                                        echo '<h6 class="text-center w-100">Sign in first to see your favourites</h6>';
-                                    }
-                                    ?>
+                                    <div class="fav-product col px-3">
+                                        <div class="row g-1">
+                                            <div class="col-4 p-2 overflow-hidden">
+                                                <img src="assets/img/product1.jpg" alt="" width="80px" height="80px" style="object-fit: cover;">
+                                            </div>
+                                            <div class="col p-2">
+                                                <h6 class="title">Product 1 Title Goes Here</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="fav-product col px-3">
+                                        <div class="row g-1">
+                                            <div class="col-4 p-2 overflow-hidden">
+                                                <img src="assets/img/product2.jpg" alt="" width="80px" height="80px" style="object-fit: cover;">
+                                            </div>
+                                            <div class="col p-2">
+                                                <h6 class="title">Product 2 Title Goes Here</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="fav-product col px-3">
+                                        <div class="row g-1">
+                                            <div class="col-4 p-2 overflow-hidden">
+                                                <img src="assets/img/product3.jpg" alt="" width="80px" height="80px" style="object-fit: cover;">
+                                            </div>
+                                            <div class="col p-2">
+                                                <h6 class="title">Product 3 Title Goes Here</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="fav-product col px-3">
+                                        <div class="row g-1">
+                                            <div class="col-4 p-2 overflow-hidden">
+                                                <img src="assets/img/product4.jpg" alt="" width="80px" height="80px" style="object-fit: cover;">
+                                            </div>
+                                            <div class="col p-2">
+                                                <h6 class="title">Product 4 Title Goes Here</h6>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+
+                        <!-- cart section -->
                         <div class="position-relative">
                             <button class="cart btn btn-light rounded-circle" id="cartButton">
                                 <i class="fa-solid fa-bag-shopping"></i>
@@ -118,58 +140,71 @@ require 'auth.php';
                                 <h5 class="text-center my-2">Cart</h5>
                                 <hr class="mb-2">
                                 <div class="cart-products row row-cols-1">
-                                    <?php
-                                    if (isset($user_id)) {
-                                        $stmt = $conn->prepare("SELECT cart.amount, items.title, items.main_photo, items.price
-                                        FROM cart
-                                        JOIN items ON cart.item_id = items.id
-                                        WHERE cart.user_id = ?");
-                                        $stmt->bind_param("i", $user_id);
-                                        $stmt->execute();
-                                        $result = $stmt->get_result();
-    
-                                        if ($result->num_rows > 0) {
-                                            while ($row = $result->fetch_assoc()) {
-                                                $amount = $row['amount'];
-                                                $title = $row['title'];
-                                                $photo = $row['main_photo'];
-                                                $price = $row['price'];
-                                                ?>
-                                                <div class="cart-product col px-3">
-                                                    <div class="row g-1">
-                                                        <div class="col-4 p-2 overflow-hidden">
-                                                            <img src="assets/img/<?php echo htmlspecialchars($photo); ?>" alt="" width="80px" height="80px" style="object-fit: cover;">
-                                                        </div>
-                                                        <div class="col p-2">
-                                                            <div class="row align-items-center">
-                                                                <div class="col-12">
-                                                                    <h6 class="title"><?php echo htmlspecialchars($title); ?></h6>
-                                                                </div>
-                                                                <div class="col-12 d-flex justify-content-between align-items-center">
-                                                                    <small class="text-secondary">Quantity: <?php echo htmlspecialchars($amount); ?></small>
-                                                                    <small class="text-secondary">$<?php echo htmlspecialchars($price); ?></small>
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                                    <div class="cart-product col px-3">
+                                        <div class="row g-1">
+                                            <div class="col-4 p-2 overflow-hidden">
+                                                <img src="assets/img/product1.jpg" alt="" width="80px" height="80px" style="object-fit: cover;">
+                                            </div>
+                                            <div class="col p-2">
+                                                <div class="row align-items-center">
+                                                    <div class="col-12">
+                                                        <h6 class="title">Product 1 Title Goes Here</h6>
+                                                    </div>
+                                                    <div class="col-12 d-flex justify-content-between align-items-center">
+                                                        <small class="text-secondary">Quantity: 1</small>
+                                                        <small class="text-secondary">$250</small>
                                                     </div>
                                                 </div>
-                                                <?php
-                                            }
-                                        } else {
-                                            echo '<h6 class="text-center w-100">Cart is empty</h6>';
-                                        }
-                                    } else {
-                                        echo '<h6 class="text-center w-100">Sign in first to see your cart</h6>';
-                                    }
-                                    ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="cart-product col px-3">
+                                        <div class="row g-1">
+                                            <div class="col-4 p-2 overflow-hidden">
+                                                <img src="assets/img/product2.jpg" alt="" width="80px" height="80px" style="object-fit: cover;">
+                                            </div>
+                                            <div class="col p-2">
+                                                <div class="row align-items-center">
+                                                    <div class="col-12">
+                                                        <h6 class="title">Product 2 Title Goes Here</h6>
+                                                    </div>
+                                                    <div class="col-12 d-flex justify-content-between align-items-center">
+                                                        <small class="text-secondary">Quantity: 2</small>
+                                                        <small class="text-secondary">$100</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="cart-product col px-3">
+                                        <div class="row g-1">
+                                            <div class="col-4 p-2 overflow-hidden">
+                                                <img src="assets/img/product3.jpg" alt="" width="80px" height="80px" style="object-fit: cover;">
+                                            </div>
+                                            <div class="col p-2">
+                                                <div class="row align-items-center">
+                                                    <div class="col-12">
+                                                        <h6 class="title">Product 3 Title Goes Here</h6>
+                                                    </div>
+                                                    <div class="col-12 d-flex justify-content-between align-items-center">
+                                                        <small class="text-secondary">Quantity: 1</small>
+                                                        <small class="text-secondary">$237</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
+                                <button class="btn btn-dark py-3 rounded-1 w-100 h-100">CHECKOUT</button>
                             </div>
                         </div>
+
+                        <!-- user profileButton -->
                         <div class="position-relative">
                             <?php
-                            if (isset($user_id)) {
+                            if (isset($_SESSION['user'])) {
                                 ?>
-                                <a href="account.php" class="profile btn btn-light rounded-circle" id="profileButton">
+                                <a href="#" class="profile btn btn-light rounded-circle" id="profileButton">
                                     <i class="fa-solid fa-user"></i>
                                 </a>
                                 <div class="profile-popover bg-white rounded-3 border border-1 border-dark mt-2 p-3 position-absolute z-3" id="profilePopover">
@@ -195,11 +230,15 @@ require 'auth.php';
                 </div>
             </div>
         </nav>
+
+        <!-- header -->
         <div class="container">
             <header class="d-flex flex-column justify-content-center align-items-center gap-3 p-5 rounded-4 mb-5" style="background-image: url(assets/img/banner-bg.jpg);">
                 <h1 class="text-white fs-1 fw-bold">Shop.com</h1>
                 <p class="text-white fs-5 text-center mt-4 mx-auto w-75" style="line-height: 1.7rem;" id="banner-text">Explore The Latest Products & Offers With A Wide Varaity Of Categories.</p>
             </header>
+
+            <!-- categories -->
             <div class="row mb-3">
                 <div class="col-6">
                     <h3 class="categories-title position-relative">Browse Categories</h3>
@@ -264,6 +303,8 @@ require 'auth.php';
                     </div>
                 </button>
             </section>
+
+            <!-- photos section -->
             <section class="gallery row justify-content-center gap-1 mb-5">
                 <!-- الصورة الأولى تأخذ 4 أعمدة -->
                 <div class="col-3">
@@ -289,6 +330,8 @@ require 'auth.php';
                     </div>
                 </div>
             </section>
+
+            <!-- Products Section -->
             <section class="hot mb-5">
                 <div class="row mb-3">
                     <div class="col-6">
@@ -300,25 +343,33 @@ require 'auth.php';
                 </div>
                 <div class="row gy-3">
                     <div class="col-12 d-flex justify-content-center align-items-center">
-                    <ul class="menu" id="menu">
-                        <li>
-                            <button class="products-btn btn border-0 active-btn" data-query="latestProducts">Latest Products</button>
-                        </li>
-                        <li>
-                            <button class="products-btn btn border-0" data-query="topRating">Top Rating</button>
-                        </li>
-                        <li>
-                            <button class="products-btn btn border-0" data-query="bestSelling">Best Selling</button>
-                        </li>
-                    </ul>
+                    
+                        <!-- Nav for products filter -->
+                        <ul class="menu" id="menu">
+                            <li>
+                                <button class="products-btn btn border-0 active-btn" data-query="latestProducts">Latest Products</button>
+                            </li>
+                            <li>
+                                <button class="products-btn btn border-0" data-query="topRating">Top Rating</button>
+                            </li>
+                            <li>
+                                <button class="products-btn btn border-0" data-query="bestSelling">Best Selling</button>
+                            </li>
+                        </ul>
                     </div>
+
+                    <!-- products container -->
                     <div class="col-12 d-flex justify-content-start align-items-center">
                         <div class="container">
-                            <div class="products row row-cols-1 row-cols-sm-2 row-cols-md-4" id="productsContainer"></div>
+                            <div class="products row row-cols-1 row-cols-sm-2 row-cols-md-4" id="productsContainer">
+                                <!-- Products are shown here -->
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
+
+            <!-- subscribe section -->
             <section class="subscribe mx-5 mb-5 p-5" id="subscribe" style="background-image: url(assets/img/subscribe-bg.jpg);">
                 <div class="d-flex gap-2 flex-column w-50 m-5">
                     <h5>Shop.com</h5>
@@ -330,6 +381,8 @@ require 'auth.php';
                     <h6>www.online-shop.com</h6>
                 </div>
             </section>
+
+            <!-- Advertisements Section -->
             <section class="d-flex flex-column gap-4 g-5 mx-5 mb-5 p-5">
                 <div class="row g-3 align-items-center">
                     <div class="col-4 ms-5">
@@ -345,6 +398,8 @@ require 'auth.php';
                     </div>
                 </div>
             </section>
+
+            <!-- Footer Section -->
             <footer class="row row-cols-1 row-cols-sm-2 row-cols-md-5 py-5 my-5 border-top">
                 <div class="col mb-3">
                     <a href="/" class="d-flex align-items-center mb-3 link-body-emphasis text-decoration-none fs-4 fw-medium text-dark">Shop.com</a>
@@ -356,35 +411,33 @@ require 'auth.php';
                 </div>
             
                 <div class="col mb-3">
-                    <h5>Section</h5>
+                    <h5>Browse</h5>
                     <ul class="nav flex-column">
-                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Home</a></li>
-                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Features</a></li>
-                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Pricing</a></li>
-                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">FAQs</a></li>
-                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">About</a></li>
+                        <li class="nav-item mb-2"><a href="index.php" class="nav-link p-0 text-body-secondary">Home</a></li>
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Earbuds</a></li>
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Laptops</a></li>
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Smart & Office</a></li>
                     </ul>
                 </div>
             
                 <div class="col mb-3">
-                    <h5>Section</h5>
+                    <h5>FAQ & Support</h5>
                     <ul class="nav flex-column">
-                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Home</a></li>
-                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Features</a></li>
-                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Pricing</a></li>
                         <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">FAQs</a></li>
-                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">About</a></li>
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Support</a></li>
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Contact</a></li>
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Privacy Policy</a></li>
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Terms Of Use</a></li>
                     </ul>
                 </div>
             
                 <div class="col mb-3">
-                    <h5>Section</h5>
+                    <h5>Follow</h5>
                     <ul class="nav flex-column">
-                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Home</a></li>
-                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Features</a></li>
-                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Pricing</a></li>
-                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">FAQs</a></li>
-                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">About</a></li>
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Facebook</a></li>
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Instagram</a></li>
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Twitter</a></li>
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Pinterest</a></li>
                     </ul>
                 </div>
             </footer>

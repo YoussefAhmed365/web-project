@@ -93,7 +93,7 @@ function toggleCartBox() {
     }
 }
 
-// Body
+// functions for setting the quantity buttons and counter
 document.querySelectorAll(".quantity").forEach(quantityContainer => {
     const minusBtn = quantityContainer.querySelector(".minus");
     const plusBtn = quantityContainer.querySelector(".plus");
@@ -132,6 +132,7 @@ document.querySelectorAll(".quantity").forEach(quantityContainer => {
     }
 });
 
+// switch between "description" & "omments" tabs to show content
 const productNavBtns = document.querySelectorAll(".product-nav-btn");
 const productInfoContainer = document.getElementById("productInfoContainer");
 const descriptionContent = document.getElementById("descriptionContent");
@@ -157,29 +158,7 @@ productNavBtns.forEach(button => {
         if (contentToShow === 'description') {
             descriptionContent.style.display = "block";
         } else if (contentToShow === 'comments') {
-
-            // If comments haven't been loaded yet, fetch them:
-            if (commentsContent.innerHTML.trim() === '') {
-
-                fetch(`get_comments.php?product_id=<?php echo $productId; ?>`)
-                .then(response => {
-                  if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                  }
-                  return response.text();
-                })
-                .then(commentsHtml => {
-                  commentsContent.innerHTML = commentsHtml;
-                  commentsContent.style.display = "block";
-                })
-                .catch(error => {
-                    console.error("Error fetching comments:", error);
-                    commentsContent.innerHTML = "<p>Error loading comments.</p>"; //Error handling and user message
-                    commentsContent.style.display = "block";
-                });
-            } else {
-                commentsContent.style.display = "block";
-            }
+            commentsContent.style.display = "block";
         }
     });
 });

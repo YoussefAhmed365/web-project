@@ -1,5 +1,18 @@
 <?php
-require 'auth.php';
+include 'db_connect.php';
+
+session_start();
+
+// التحقق من تسجيل الدخول
+if (!isset($_SESSION['user'])) {
+    header("Location: login.php");
+    exit();
+}
+
+// عرض بيانات المستخدم
+$user = $_SESSION['user'];
+
+//get the product ID from the URL
 $productId = isset($_GET['id']) ? intval($_GET['id']) : '';
 ?>
 <!DOCTYPE html>
@@ -17,14 +30,13 @@ $productId = isset($_GET['id']) ? intval($_GET['id']) : '';
         <div class="loader"></div>
     </div>
     <div class="content" id="content">
-        <nav class="navbar navbar-expand-lg py-3" aria-label="Thirteenth navbar example">
+    <nav class="navbar navbar-expand-lg py-3">
             <div class="container">
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample11" aria-controls="navbarsExample11" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-    
-                <div class="collapse navbar-collapse d-lg-flex" id="navbarsExample11">
+                <div class="collapse navbar-collapse d-lg-flex">
+                    <!-- navbar logo -->
                     <a class="navbar-brand col-lg-3 me-0 fw-medium" href="index.php">Shop.com</a>
+
+                    <!-- navbar links -->
                     <ul class="navbar-nav col-lg-6 justify-content-lg-center">
                         <li class="nav-item">
                             <a class="nav-link active" aria-current="page" href="index.php">Home</a>
@@ -53,12 +65,16 @@ $productId = isset($_GET['id']) ? intval($_GET['id']) : '';
                     </ul>
     
                     <div class="d-lg-flex col-lg-3 justify-content-lg-end gap-1">
+
+                        <!-- search section -->
                         <div class="search-container d-flex align-items-center">
                             <button class="search-btn btn btn-light rounded-circle" id="searchButton">
                                 <i class="fa-solid fa-magnifying-glass"></i>
                             </button>
                             <input type="text" class="form-control search-input ms-2" id="searchInput" placeholder="Search...">
                         </div>
+
+                        <!-- favourite section -->
                         <div class="position-relative">
                             <button class="favourite btn btn-light rounded-circle" id="favButton">
                                 <i class="fa-solid fa-heart"></i>
@@ -69,48 +85,56 @@ $productId = isset($_GET['id']) ? intval($_GET['id']) : '';
                                         <h5 class="mb-0">Favourites</h5>
                                     </div>
                                     <div class="col-6 text-end">
-                                        <a href="fav.php" class="text-decoration-none text-secondary">Show All</a>
+                                        <a href="#" class="text-decoration-none text-secondary">Show All</a>
                                     </div>
                                 </div>
                                 <hr class="mb-2">
                                 <div class="fav-products row row-cols-1">                                    
-                                    <?php
-                                    if (isset($user_id)) {
-                                        $stmt = $conn->prepare("SELECT items.title, items.main_photo
-                                        FROM favorite
-                                        JOIN items ON favorite.item_id = items.id
-                                        WHERE favorite.user_id = ?");
-                                        $stmt->bind_param("i", $user_id);
-                                        $stmt->execute();
-                                        $result = $stmt->get_result();
-
-                                        if ($result->num_rows > 0) {
-                                            while ($row = $result->fetch_assoc()) {
-                                                $title = $row['title'];
-                                                $photo = $row['main_photo'];
-                                                ?>
-                                                <div class="fav-product col px-3">
-                                                    <div class="row g-1">
-                                                        <div class="col-4 p-2 overflow-hidden">
-                                                            <img src="assets/img/<?php echo htmlspecialchars($photo); ?>" alt="" width="80px" height="80px" style="object-fit: cover;">
-                                                        </div>
-                                                        <div class="col p-2">
-                                                            <h6 class="title"><?php echo htmlspecialchars($title); ?></h6>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <?php
-                                            }
-                                        } else {
-                                            echo '<h6 class="text-center w-100">No favourites yet</h6>';
-                                        }
-                                    } else {
-                                        echo '<h6 class="text-center w-100">Sign in first to see your favourites</h6>';
-                                    }
-                                    ?>
+                                    <div class="fav-product col px-3">
+                                        <div class="row g-1">
+                                            <div class="col-4 p-2 overflow-hidden">
+                                                <img src="assets/img/product1.jpg" alt="" width="80px" height="80px" style="object-fit: cover;">
+                                            </div>
+                                            <div class="col p-2">
+                                                <h6 class="title">Product 1 Title Goes Here</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="fav-product col px-3">
+                                        <div class="row g-1">
+                                            <div class="col-4 p-2 overflow-hidden">
+                                                <img src="assets/img/product2.jpg" alt="" width="80px" height="80px" style="object-fit: cover;">
+                                            </div>
+                                            <div class="col p-2">
+                                                <h6 class="title">Product 2 Title Goes Here</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="fav-product col px-3">
+                                        <div class="row g-1">
+                                            <div class="col-4 p-2 overflow-hidden">
+                                                <img src="assets/img/product3.jpg" alt="" width="80px" height="80px" style="object-fit: cover;">
+                                            </div>
+                                            <div class="col p-2">
+                                                <h6 class="title">Product 3 Title Goes Here</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="fav-product col px-3">
+                                        <div class="row g-1">
+                                            <div class="col-4 p-2 overflow-hidden">
+                                                <img src="assets/img/product4.jpg" alt="" width="80px" height="80px" style="object-fit: cover;">
+                                            </div>
+                                            <div class="col p-2">
+                                                <h6 class="title">Product 4 Title Goes Here</h6>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+
+                        <!-- cart section -->
                         <div class="position-relative">
                             <button class="cart btn btn-light rounded-circle" id="cartButton">
                                 <i class="fa-solid fa-bag-shopping"></i>
@@ -119,58 +143,71 @@ $productId = isset($_GET['id']) ? intval($_GET['id']) : '';
                                 <h5 class="text-center my-2">Cart</h5>
                                 <hr class="mb-2">
                                 <div class="cart-products row row-cols-1">
-                                    <?php
-                                    if (isset($user_id)) {
-                                        $stmt = $conn->prepare("SELECT cart.amount, items.title, items.main_photo, items.price
-                                        FROM cart
-                                        JOIN items ON cart.item_id = items.id
-                                        WHERE cart.user_id = ?");
-                                        $stmt->bind_param("i", $user_id);
-                                        $stmt->execute();
-                                        $result = $stmt->get_result();
-    
-                                        if ($result->num_rows > 0) {
-                                            while ($row = $result->fetch_assoc()) {
-                                                $amount = $row['amount'];
-                                                $title = $row['title'];
-                                                $photo = $row['main_photo'];
-                                                $price = $row['price'];
-                                                ?>
-                                                <div class="cart-product col px-3">
-                                                    <div class="row g-1">
-                                                        <div class="col-4 p-2 overflow-hidden">
-                                                            <img src="assets/img/<?php echo htmlspecialchars($photo); ?>" alt="" width="80px" height="80px" style="object-fit: cover;">
-                                                        </div>
-                                                        <div class="col p-2">
-                                                            <div class="row align-items-center">
-                                                                <div class="col-12">
-                                                                    <h6 class="title"><?php echo htmlspecialchars($title); ?></h6>
-                                                                </div>
-                                                                <div class="col-12 d-flex justify-content-between align-items-center">
-                                                                    <small class="text-secondary">Quantity: <?php echo htmlspecialchars($amount); ?></small>
-                                                                    <small class="text-secondary">$<?php echo htmlspecialchars($price); ?></small>
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                                    <div class="cart-product col px-3">
+                                        <div class="row g-1">
+                                            <div class="col-4 p-2 overflow-hidden">
+                                                <img src="assets/img/product1.jpg" alt="" width="80px" height="80px" style="object-fit: cover;">
+                                            </div>
+                                            <div class="col p-2">
+                                                <div class="row align-items-center">
+                                                    <div class="col-12">
+                                                        <h6 class="title">Product 1 Title Goes Here</h6>
+                                                    </div>
+                                                    <div class="col-12 d-flex justify-content-between align-items-center">
+                                                        <small class="text-secondary">Quantity: 1</small>
+                                                        <small class="text-secondary">$250</small>
                                                     </div>
                                                 </div>
-                                                <?php
-                                            }
-                                        } else {
-                                            echo '<h6 class="text-center w-100">Cart is empty</h6>';
-                                        }
-                                    } else {
-                                        echo '<h6 class="text-center w-100">Sign in first to see your cart</h6>';
-                                    }
-                                    ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="cart-product col px-3">
+                                        <div class="row g-1">
+                                            <div class="col-4 p-2 overflow-hidden">
+                                                <img src="assets/img/product2.jpg" alt="" width="80px" height="80px" style="object-fit: cover;">
+                                            </div>
+                                            <div class="col p-2">
+                                                <div class="row align-items-center">
+                                                    <div class="col-12">
+                                                        <h6 class="title">Product 2 Title Goes Here</h6>
+                                                    </div>
+                                                    <div class="col-12 d-flex justify-content-between align-items-center">
+                                                        <small class="text-secondary">Quantity: 2</small>
+                                                        <small class="text-secondary">$100</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="cart-product col px-3">
+                                        <div class="row g-1">
+                                            <div class="col-4 p-2 overflow-hidden">
+                                                <img src="assets/img/product3.jpg" alt="" width="80px" height="80px" style="object-fit: cover;">
+                                            </div>
+                                            <div class="col p-2">
+                                                <div class="row align-items-center">
+                                                    <div class="col-12">
+                                                        <h6 class="title">Product 3 Title Goes Here</h6>
+                                                    </div>
+                                                    <div class="col-12 d-flex justify-content-between align-items-center">
+                                                        <small class="text-secondary">Quantity: 1</small>
+                                                        <small class="text-secondary">$237</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
+                                <button class="btn btn-dark py-3 rounded-1 w-100 h-100">CHECKOUT</button>
                             </div>
                         </div>
+
+                        <!-- user profileButton -->
                         <div class="position-relative">
                             <?php
-                            if (isset($user_id)) {
+                            if (isset($_SESSION['user'])) {
                                 ?>
-                                <a href="account.php" class="profile btn btn-light rounded-circle" id="profileButton">
+                                <a href="#" class="profile btn btn-light rounded-circle" id="profileButton">
                                     <i class="fa-solid fa-user"></i>
                                 </a>
                                 <div class="profile-popover bg-white rounded-3 border border-1 border-dark mt-2 p-3 position-absolute z-3" id="profilePopover">
@@ -198,6 +235,7 @@ $productId = isset($_GET['id']) ? intval($_GET['id']) : '';
         </nav>
         <hr class="mb-5 mt-0">
         <div class="container">
+            <!-- show products here -->
             <?php
             $stmt = $conn->prepare("SELECT i.title, i.description, i.price, i.main_photo, i.photos, (i.amount - i.sold) AS available,
                 COUNT(c.id) AS comment_count,
@@ -211,62 +249,81 @@ $productId = isset($_GET['id']) ? intval($_GET['id']) : '';
 
             if ($result->num_rows === 1) {
                 $row = $result->fetch_assoc();
-                $title = htmlspecialchars($row['title']);
-                $description = htmlspecialchars($row['description']);
-                $price = htmlspecialchars($row['price']);
-                $main_photo = htmlspecialchars($row['main_photo']);
-                $photos = htmlspecialchars($row['photos']);
-                $available = htmlspecialchars($row['available']);
-                $comments = htmlspecialchars($row['comment_count']);
+                $title = $row['title'];
+                $description = $row['description'];
+                $price = $row['price'];
+                $main_photo = $row['main_photo'];
+                $photos = $row['photos'];
+                $available = $row['available'];
+                $comments = $row['comment_count'];
                 $rating = (int)$row['average_rating'];
             ?>
+
+            <!-- breadcrumb navbar -->
             <nav class="mb-4" aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="index.php">Home</a></li>
-                    <li class="breadcrumb-item"><a href="products.html">Products</a></li>
-                    <li class="breadcrumb-item active text-truncate" aria-current="page"><?php echo htmlspecialchars($title); ?></li>
+                    <li class="breadcrumb-item"><a href="#">Products</a></li>
+                    <li class="breadcrumb-item active text-truncate" aria-current="page"><?php echo $title; ?></li>
                 </ol>
             </nav>
+
+            <!-- product details -->
             <div class="row g-4 mb-5">
+
+                <!-- show product images -->
                 <div class="col-6">
-                    <div class="row g-4">
-                        <div class="col-2 d-flex flex-column align-items-center justify-content-start gap-3">
-                            <button class="btn p-0 m-0 rounded-0 border-0">
-                                <img src="assets/img/product3.jpg" alt="" class="object-fit-cover" width="80px" height="80px">
-                            </button>
-                            <button class="btn p-0 m-0 rounded-0 border-0">
-                                <img src="assets/img/img2.jpg" alt="" class="object-fit-cover" width="80px" height="80px">
-                            </button>
-                            <button class="btn p-0 m-0 rounded-0 border-0">
-                                <img src="assets/img/product4.jpg" alt="" class="object-fit-cover" width="80px" height="80px">
-                            </button>
-                        </div>
+                    <div class="row g-4 justify-content-end">
+                        <?php
+                        if(!empty($photos)) {
+                            ?>
+                            <div class="col-2 d-flex flex-column align-items-center justify-content-start gap-3">
+                            <?php
+                            foreach ($photos as $photo) {
+                                ?>
+                                <button class="btn p-0 m-0 rounded-0 border-0">
+                                    <img src="assets/img/<?php echo $photo; ?>" alt="" class="object-fit-cover" width="80px" height="80px">
+                                </button>
+                                <?php
+                            }
+                            ?>
+                            </div>
+                            <?php
+                        }
+                        ?>
                         <div class="col-10">
-                            <img src="assets/img/product3.jpg" alt="" class="object-fit-cover" width="100%" height="400px">
+                            <img src="assets/img/<?php echo $main_photo; ?>" alt="" class="object-fit-cover" width="100%" height="400px">
                         </div>
                     </div>
                 </div>
+
+                <!-- show product details -->
                 <div class="col-6 d-flex flex-column justify-content-between">
                     <small class="text-secondary fw-medium">Category</small>
-                    <h2 class="mb-3"><?php echo htmlspecialchars($title); ?></h2>
+                    <h2 class="mb-3"><?php echo $title; ?></h2>
                     <h6 class="mb-4">
+                        <!-- number of stars for rating -->
                         <?php
                         for ($i = 1; $i <= 5; $i++) {
                             $starClass = ($i <= $rating) ? 'fa-solid' : 'fa-regular';
                             echo '<i class="' . $starClass . ' fa-star"></i>';
                         }
                         ?>
-                        <small class="text-secondary">(<?php echo htmlspecialchars($comments); ?> Reviews)</small>
+                        <!-- number of comments -->
+                        <small class="text-secondary">(<?php echo $comments; ?> Reviews)</small>
                     </h6>
-                    <h3 class="fw-bold mb-4">$<?php echo htmlspecialchars($price); ?></h3>
+                    <h3 class="fw-bold mb-4">$<?php echo $price; ?></h3>
                     <div class="row mb-5">
+                        <!-- some details -->
                         <div class="col-6">
-                            <h6>Available: <small class="text-secondary"><?php echo htmlspecialchars($available); ?></small></h6>
+                            <h6>Available: <small class="text-secondary"><?php echo $available; ?></small></h6>
                         </div>
                         <div class="col-6">
-                            <h6>Shipping: <small class="text-secondary"><?php echo htmlspecialchars(($price >= 100)? 'This Product is Free Shipping' : "$20 Including VAT."); ?></small></h6>
+                            <h6>Shipping: <small class="text-secondary"><?php echo ($price >= 100) ? 'This Product is Free Shipping' : "$20 Including VAT."; ?></small></h6>
                         </div>
                     </div>
+
+                    <!-- quantity buttons -->
                     <div class="row mb-4">
                         <div class="col-4">
                             <div class="quantity rounded-pill">
@@ -275,10 +332,14 @@ $productId = isset($_GET['id']) ? intval($_GET['id']) : '';
                                 <button class="plus btn btn-light border-0 rounded-0" aria-label="Increase">+</button>
                             </div>
                         </div>
+
+                        <!-- add to cart button -->
                         <div class="col-4">
-                            <button class="btn btn-default w-100 py-3">Add to Cart</button>
+                            <button class="btn btn-default w-100 py-3" id="addCartBtn">Add to Cart</button>
                         </div>
                     </div>
+
+                    <!-- social media links -->
                     <div class="d-flex justify-content-start align-items-center gap-2">
                         <span class="fw-bold">SHARE ON:</span>
                         <a href="https://facebook.com" class="text-decoration-none text-dark">
@@ -296,18 +357,27 @@ $productId = isset($_GET['id']) ? intval($_GET['id']) : '';
                     </div>
                 </div>
             </div>
+
+            <!-- comments & description section -->
             <div class="row g-5 my-5 ms-5 ps-4">
                 <div class="col-9">
+                    <!-- comments & description buttons -->
                     <ul class="nav nav-tabs">
                         <li class="nav-item">
                             <button class="product-nav-btn nav-link text-dark active" data-content="description">Description</button>
                         </li>
                         <li class="nav-item">
-                            <button class="product-nav-btn nav-link text-dark" data-content="comments">Reviews (<?php echo htmlspecialchars($comments); ?>)</button>
+                            <button class="product-nav-btn nav-link text-dark" data-content="comments">Reviews (<?php echo $comments; ?>)</button>
                         </li>
                     </ul>
+
+                    <!-- comments & description container to show data from database -->
                     <div class="mt-4 lh-base" id="productInfoContainer">
+
+                        <!-- description content -->
                         <div id="descriptionContent" class="active-content"><?php echo $description; ?></div>
+
+                        <!-- comments -->
                         <div id="commentsContent" style="display: none;">
                             <?php
                             $stmt = $conn->prepare("SELECT comments.*, users.firstname, users.lastname, users.profilephoto
@@ -321,22 +391,27 @@ $productId = isset($_GET['id']) ? intval($_GET['id']) : '';
 
                             if ($result->num_rows > 0) {
                                 while ($row = $result->fetch_assoc()) {
-                                    $comment = htmlspecialchars($row['comment']);
-                                    $rating = htmlspecialchars($row['rating']);
+                                    $comment = $row['comment'];
+                                    $rating = $row['rating'];
                                     $created_at = DateTime::createFromFormat('Y-m-d H:i:s', $row['created_at']);
                                     $updated_at = DateTime::createFromFormat('Y-m-d H:i:s', $row['updated_at']);
                                     $dateString = ($created_at->getTimestamp() === $updated_at->getTimestamp()) ? "Published at " : "Updated at ";
                                     $formattedDate = $updated_at->format("M d, Y"); //Use updated_at if different
-                                    $name = htmlspecialchars($row['firstname'] . " " . $row['lastname']);
-                                    $profile = (!empty($row['profilephoto'])) ? htmlspecialchars($row['profilephoto']) : 'default.png';
+                                    $name = $row['firstname'] . " " . $row['lastname'];
+                                    $profile = (!empty($row['profilephoto'])) ? $row['profilephoto'] : 'default.png';
                                     ?>
+
+                                    <!-- comment card for each person -->
                                     <div class="container">
+                                        <!-- profile photo -->
                                         <div class="d-flex jsutify-content-start align-items-center gap-2 mb-2">
                                             <div class="rounded-circle d-flex justify-content-center align-items-center overflow-hidden">
                                                 <img src="assets/img/profiles/<?php echo $profile; ?>" alt="" style="width: 3rem;">
                                             </div>
+                                            <!-- name -->
                                             <h5 class="mb-0"><?php echo $name; ?></h5>
                                         </div>
+                                        <!-- number of stars -->
                                         <div class="mb-2">
                                             <?php
                                             for ($i = 1; $i <= 5; $i++) {
@@ -345,7 +420,9 @@ $productId = isset($_GET['id']) ? intval($_GET['id']) : '';
                                             }
                                             ?>
                                         </div>
+                                        <!-- comment -->
                                         <p class="mb-2"><?php echo $comment; ?></p>
+                                        <!-- date of publish -->
                                         <small class="text-secondary fw-medium"><?php echo "$dateString $formattedDate"; ?></small>
                                     </div>
                                     <?php
@@ -355,6 +432,8 @@ $productId = isset($_GET['id']) ? intval($_GET['id']) : '';
                         </div>
                     </div>
                 </div>
+
+                <!-- some additional information -->
                 <div class="col-3">
                     <h5 class="mb-3">Additional Information</h5>
                     <small class="fw-bold">DIMENSIONS</small>
@@ -368,121 +447,133 @@ $productId = isset($_GET['id']) ? intval($_GET['id']) : '';
                 echo '<h5 class="w-100 text-center text-secondary">Sorry! We are working on this trouble right now or the page is not exist.</h5>';
             }
             ?>
+
+            <!-- products suggestions -->
             <h2>You may also like</h2>
             <div class="products row row-cols-2 row-cols-sm-3 row-cols-md-5 g-4 mt-5">
-                <a class="col btn m-0 border-0 rounded-0 text-start">
-                    <div class="card border-0 rounded-0">
-                        <div class="card-img position-relative d-flex justify-content-center align-items-center overflow-hidden">
-                            <img src="assets/img/product1.jpg" alt="" class="card-img-top">
-                            <span class="badge position-absolute m-2 top-0 start-0 bg-warning">New</span>
-                        </div>
-                        <div class="card-body">
-                            <h6>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-regular fa-star"></i>
-                                <small class="text-secondary">(357 Reviews)</small>
-                            </h6>
-                            <h5 class="card-title">Wireless Noise-Canceling Earbuds with Mic From Apple</h5>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h6 class="card-text fw-bold"><del class="text-secondary fw-normal">$9.11</del>&nbsp;$7.99</h6>
-                                <button href="#" class="btn" role="button"><i class="fa-solid fa-heart" aria-hidden="true"></i></button>
+                <div class="col">
+                    <a class="btn m-0 border-0 rounded-0 text-start">
+                        <div class="card border-0 rounded-0">
+                            <div class="card-img position-relative d-flex justify-content-center align-items-center overflow-hidden">
+                                <img src="assets/img/product1.jpg" alt="" class="card-img-top">
+                                <span class="badge position-absolute m-2 top-0 start-0 bg-warning">New</span>
+                            </div>
+                            <div class="card-body">
+                                <h6>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-regular fa-star"></i>
+                                    <small class="text-secondary">(357 Reviews)</small>
+                                </h6>
+                                <h5 class="card-title">Wireless Noise-Canceling Earbuds with Mic From Apple</h5>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h6 class="card-text fw-bold"><del class="text-secondary fw-normal">$9.11</del>&nbsp;$7.99</h6>
+                                    <button href="#" class="btn" role="button"><i class="fa-solid fa-heart" aria-hidden="true"></i></button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </a>
-                <a class="col btn m-0 border-0 rounded-0 text-start">
-                    <div class="card border-0 rounded-0">
-                        <div class="card-img position-relative d-flex justify-content-center align-items-center overflow-hidden">
-                            <img src="assets/img/product2.jpg" alt="" class="card-img-top">
-                            <span class="badge position-absolute m-2 top-0 end-0 bg-danger text-white">Most Popular</span>
-                        </div>
-                        <div class="card-body">
-                            <h6>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-regular fa-star"></i>
-                                <i class="fa-regular fa-star"></i>
-                                <small class="text-secondary">(214 Reviews)</small>
-                            </h6>
-                            <h5 class="card-title">Sweatproof Sports Headphones with Secure Fit</h5>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h6 class="card-text fw-bold">$14.80</h6>
-                                <button href="#" class="btn" role="button"><i class="fa-regular fa-heart" aria-hidden="true"></i></button>
+                    </a>
+                </div>
+                <div class="col">
+                    <a class=" btn m-0 border-0 rounded-0 text-start">
+                        <div class="card border-0 rounded-0">
+                            <div class="card-img position-relative d-flex justify-content-center align-items-center overflow-hidden">
+                                <img src="assets/img/product2.jpg" alt="" class="card-img-top">
+                                <span class="badge position-absolute m-2 top-0 end-0 bg-danger text-white">Most Popular</span>
+                            </div>
+                            <div class="card-body">
+                                <h6>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-regular fa-star"></i>
+                                    <i class="fa-regular fa-star"></i>
+                                    <small class="text-secondary">(214 Reviews)</small>
+                                </h6>
+                                <h5 class="card-title">Sweatproof Sports Headphones with Secure Fit</h5>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h6 class="card-text fw-bold">$14.80</h6>
+                                    <button href="#" class="btn" role="button"><i class="fa-regular fa-heart" aria-hidden="true"></i></button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </a>
-                <a class="col btn m-0 border-0 rounded-0 text-start">
-                    <div class="card border-0 rounded-0">
-                        <div class="card-img position-relative d-flex justify-content-center align-items-center overflow-hidden">
-                            <img src="assets/img/product3.jpg" alt="" class="card-img-top">
-                        </div>
-                        <div class="card-body">
-                            <h6>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-regular fa-star"></i>
-                                <small class="text-secondary">(1238 Reviews)</small>
-                            </h6>
-                            <h5 class="card-title">Ultra-Slim Lightweight Laptop with Powerful Processor</h5>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h6 class="card-text fw-bold">$350</h6>
-                                <button href="#" class="btn" role="button"><i class="fa-regular fa-heart" aria-hidden="true"></i></button>
+                    </a>
+                </div>
+                <div class="col">
+                    <a class=" btn m-0 border-0 rounded-0 text-start">
+                        <div class="card border-0 rounded-0">
+                            <div class="card-img position-relative d-flex justify-content-center align-items-center overflow-hidden">
+                                <img src="assets/img/product3.jpg" alt="" class="card-img-top">
+                            </div>
+                            <div class="card-body">
+                                <h6>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-regular fa-star"></i>
+                                    <small class="text-secondary">(1238 Reviews)</small>
+                                </h6>
+                                <h5 class="card-title">Ultra-Slim Lightweight Laptop with Powerful Processor</h5>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h6 class="card-text fw-bold">$350</h6>
+                                    <button href="#" class="btn" role="button"><i class="fa-regular fa-heart" aria-hidden="true"></i></button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </a>
-                <a class="col btn m-0 border-0 rounded-0 text-start">
-                    <div class="card border-0 rounded-0">
-                        <div class="card-img position-relative d-flex justify-content-center align-items-center overflow-hidden">
-                            <img src="assets/img/product4.jpg" alt="" class="card-img-top">
-                        </div>
-                        <div class="card-body">
-                            <h6>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-regular fa-star"></i>
-                                <i class="fa-regular fa-star"></i>
-                                <small class="text-secondary">(214 Reviews)</small>
-                            </h6>
-                            <h5 class="card-title">Touchscreen Laptop with High Resolution Display and Stylus</h5>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h6 class="card-text fw-bold">$430</h6>
-                                <button href="#" class="btn" role="button"><i class="fa-regular fa-heart" aria-hidden="true"></i></button>
+                    </a>
+                </div>
+                <div class="col">
+                    <a class=" btn m-0 border-0 rounded-0 text-start">
+                        <div class="card border-0 rounded-0">
+                            <div class="card-img position-relative d-flex justify-content-center align-items-center overflow-hidden">
+                                <img src="assets/img/product4.jpg" alt="" class="card-img-top">
+                            </div>
+                            <div class="card-body">
+                                <h6>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-regular fa-star"></i>
+                                    <i class="fa-regular fa-star"></i>
+                                    <small class="text-secondary">(214 Reviews)</small>
+                                </h6>
+                                <h5 class="card-title">Touchscreen Laptop with High Resolution Display and Stylus</h5>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h6 class="card-text fw-bold">$430</h6>
+                                    <button href="#" class="btn" role="button"><i class="fa-regular fa-heart" aria-hidden="true"></i></button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </a>
-                <a class="col btn m-0 border-0 rounded-0 text-start">
-                    <div class="card border-0 rounded-0">
-                        <div class="card-img position-relative d-flex justify-content-center align-items-center overflow-hidden">
-                            <img src="assets/img/product2.jpg" alt="" class="card-img-top">
-                            <span class="badge position-absolute m-2 top-0 end-0 bg-danger text-white">Most Popular</span>
-                        </div>
-                        <div class="card-body">
-                            <h6>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-regular fa-star"></i>
-                                <i class="fa-regular fa-star"></i>
-                                <small class="text-secondary">(214 Reviews)</small>
-                            </h6>
-                            <h5 class="card-title">Sweatproof Sports Headphones with Secure Fit</h5>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h6 class="card-text fw-bold">$14.80</h6>
-                                <button href="#" class="btn" role="button"><i class="fa-solid fa-heart" aria-hidden="true"></i></button>
+                    </a>
+                </div>
+                <div class="col">
+                    <a class=" btn m-0 border-0 rounded-0 text-start">
+                        <div class="card border-0 rounded-0">
+                            <div class="card-img position-relative d-flex justify-content-center align-items-center overflow-hidden">
+                                <img src="assets/img/product2.jpg" alt="" class="card-img-top">
+                                <span class="badge position-absolute m-2 top-0 end-0 bg-danger text-white">Most Popular</span>
+                            </div>
+                            <div class="card-body">
+                                <h6>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-regular fa-star"></i>
+                                    <i class="fa-regular fa-star"></i>
+                                    <small class="text-secondary">(214 Reviews)</small>
+                                </h6>
+                                <h5 class="card-title">Sweatproof Sports Headphones with Secure Fit</h5>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h6 class="card-text fw-bold">$14.80</h6>
+                                    <button href="#" class="btn" role="button"><i class="fa-solid fa-heart" aria-hidden="true"></i></button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </a>
+                    </a>
+                </div>
             </div>
             <footer class="row row-cols-1 row-cols-sm-2 row-cols-md-5 py-5 my-5 border-top">
                 <div class="col mb-3">
@@ -495,35 +586,33 @@ $productId = isset($_GET['id']) ? intval($_GET['id']) : '';
                 </div>
             
                 <div class="col mb-3">
-                    <h5>Section</h5>
+                    <h5>Browse</h5>
                     <ul class="nav flex-column">
-                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Home</a></li>
-                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Features</a></li>
-                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Pricing</a></li>
-                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">FAQs</a></li>
-                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">About</a></li>
+                        <li class="nav-item mb-2"><a href="index.php" class="nav-link p-0 text-body-secondary">Home</a></li>
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Earbuds</a></li>
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Laptops</a></li>
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Smart & Office</a></li>
                     </ul>
                 </div>
             
                 <div class="col mb-3">
-                    <h5>Section</h5>
+                    <h5>FAQ & Support</h5>
                     <ul class="nav flex-column">
-                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Home</a></li>
-                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Features</a></li>
-                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Pricing</a></li>
                         <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">FAQs</a></li>
-                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">About</a></li>
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Support</a></li>
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Contact</a></li>
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Privacy Policy</a></li>
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Terms Of Use</a></li>
                     </ul>
                 </div>
             
                 <div class="col mb-3">
-                    <h5>Section</h5>
+                    <h5>Follow</h5>
                     <ul class="nav flex-column">
-                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Home</a></li>
-                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Features</a></li>
-                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Pricing</a></li>
-                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">FAQs</a></li>
-                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">About</a></li>
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Facebook</a></li>
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Instagram</a></li>
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Twitter</a></li>
+                        <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Pinterest</a></li>
                     </ul>
                 </div>
             </footer>

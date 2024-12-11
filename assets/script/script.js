@@ -4,14 +4,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const content = document.getElementById("content");
 
     // الانتظار حتى يتم تحميل الصفحة بالكامل (بما في ذلك الصور والمصادر)
-    window.addEventListener("load", () => {
+    window.onload = () => {
         // إخفاء اللودر بعد تحميل الصفحة بالكامل
         loader.style.display = "none";
 
         // عرض المحتوى بعد انتهاء التحميل
         content.style.display = "block";
-    });
+    };
 });
+
 
 // search button
 const searchButton = document.getElementById('searchButton');
@@ -29,6 +30,7 @@ document.addEventListener('click', (e) => {
         searchContainer.classList.remove('expanded');
     }
 });
+
 
 // favouraite button
 const favBtn = document.getElementById("favButton");
@@ -59,6 +61,7 @@ function toggleFavBox() {
         favBox.style.display = "block";
     }
 }
+
 
 // cart button
 const cartBox = document.getElementById("cartBox");
@@ -93,7 +96,8 @@ function toggleCartBox() {
     }
 }
 
-/*Body*/
+
+// show products from database with applying navbar filters
 const showProducts = (() => {
     const productsContainer = document.getElementById("productsContainer");
     const productBtns = document.querySelectorAll(".products-btn");
@@ -112,6 +116,7 @@ const showProducts = (() => {
         GROUP BY i.id, i.title, i.price, i.main_photo
         ORDER BY i.created_at DESC
         LIMIT 8`,
+
         topRating: `SELECT i.id, i.title, i.price, i.main_photo,
             COUNT(c.id) AS comment_count,
             COALESCE(AVG(c.rating), 0) AS average_rating,
@@ -125,6 +130,7 @@ const showProducts = (() => {
         GROUP BY i.id, i.title, i.price, i.main_photo
         ORDER BY average_rating DESC
         LIMIT 8`,
+
         bestSelling: `SELECT i.id, i.title, i.price, i.main_photo,
             COUNT(c.id) AS comment_count,
             COALESCE(AVG(c.rating), 0) AS average_rating,
@@ -140,6 +146,7 @@ const showProducts = (() => {
         LIMIT 8`
     };
 
+    // معالجة الأحداث وإرسال الإستعلامات بالتزامن باستخدام async و await لمنع حدوث تداخل الأوامر
     const fetchProducts = async (queryKey = 'latestProducts') => {
         const query = sqlQueries[queryKey];
         if (!query) {
@@ -180,45 +187,3 @@ const showProducts = (() => {
 
     fetchProducts();
 })();
-
-document.addEventListener('click', function (event) {  // Event delegation
-    if (event.target.closest('.add-fav-btn')) {   // Use closest() to handle clicks on the icon within the button as well.
-        const button = event.target.closest('.add-fav-btn');
-        const itemId = button.dataset.id;
-        const icon = button.querySelector("i");
-        let state = '';
-
-        if (icon.classList.contains("fa-regular")) {
-            state = 'add';
-        } else {
-            state = 'remove';
-        }
-        
-        icon.classList.toggle("fa-regular");
-        icon.classList.toggle("fa-solid");
-
-        fetch("fav_handler.php", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ item_id: itemId, state: state })
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status} - ${response.statusText}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (!data.success) {
-                icon.classList.toggle("fa-regular");
-                icon.classList.toggle("fa-solid");
-                throw new Error(data.message);
-            }
-        })
-        .catch(error => {
-            console.error("Error adding/removing favorite:", error);
-        });
-    }
-});
